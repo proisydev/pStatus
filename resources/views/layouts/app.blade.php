@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <title>@yield('title', 'Undefined') — pStatus</title>
+    <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+    <script src="{{ mix('js/app.js') }}" defer></script>
+</head>
+
+<body class="bg-gray-950 text-gray-100 min-h-screen flex flex-col">
+    <header class="border-b border-gray-800">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <div class="h-8 w-8 rounded-full bg-violet-600 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </div>
+                    <span class="text-xl font-bold">pStatus</span>
+                </div>
+                <nav>
+                    <ul class="flex space-x-6">
+                        <li><a href="/" class="text-violet-400 hover:text-violet-300">All monitors</a></li>
+                        <li><a href="/incidents" class="text-gray-400 hover:text-gray-300">Incidents</a></li>
+                        <li><a href="https://docs.pstatus.fr" rel="noopener" title="pStatus's API" target="_blank"
+                                class="text-gray-400 hover:text-gray-300">API</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow container mx-auto px-4 py-8">
+        @yield('content')
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-800 py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <div class="flex items-center space-x-2">
+                        <div class="h-6 w-6 rounded-full bg-violet-600 flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
+                        </div>
+                        <span class="font-bold">StatusPulse</span>
+                    </div>
+                </div>
+                <div class="flex space-x-6 text-sm text-gray-400">
+                    <a href="https://proisy.dev/contact" rel="noopener" target="_blank"
+                        class="hover:text-gray-300">Contact</a>
+                    <a href="#" class="hover:text-gray-300">Privacy Policy</a>
+                    <a href="#" class="hover:text-gray-300">Terms of Service</a>
+                </div>
+                <div class="mt-4 md:mt-0 text-sm text-gray-500">
+                    2025 &copy; <a href="https://proisy.dev/?ref=pstatus.fr" target="_blank" rel="noopener">Christopher
+                        Proisy</a> — All rights reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>
