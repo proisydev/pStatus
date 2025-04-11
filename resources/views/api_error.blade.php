@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('title', 'All monitors')
+@section('title', 'API Error')
 
 @section('content')
-    <h1>An error occurred while fetching weather data:</h1>
+    <h1>An error occurred while fetching API data:</h1>
     <p>{{ $error }}</p>
 @endsection

@@ -3,7 +3,9 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>@yield('title', 'Undefined') — pStatus</title>
+    <title>@yield('title', 'Undefined') — {{ config('app.name') }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="@yield('description', 'Status page for all your services')">
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
     <script src="{{ mix('js/app.js') }}" defer></script>
 </head>
@@ -20,13 +22,16 @@
                                 d="M13 10V3L4 14h7v7l9-11h-7z" />
                         </svg>
                     </div>
-                    <span class="text-xl font-bold">pStatus</span>
+                    <span class="text-xl font-bold">{{ config('app.name') }}</span>
                 </div>
                 <nav>
                     <ul class="flex space-x-6">
-                        <li><a href="/" class="text-violet-400 hover:text-violet-300">All monitors</a></li>
-                        <li><a href="/incidents" class="text-gray-400 hover:text-gray-300">Incidents</a></li>
-                        <li><a href="https://docs.pstatus.fr" rel="noopener" title="pStatus's API" target="_blank"
+                        <li><a href="{{ config('app.url') }}" class="text-violet-400 hover:text-violet-300">All
+                                monitors</a></li>
+                        <li><a href="{{ config('app.url') }}/incidents"
+                                class="text-gray-400 hover:text-gray-300">Incidents</a></li>
+                        <li><a href="https://docs.{{ parse_url(config('app.url'), PHP_URL_HOST) }}" rel="noopener"
+                                title="{{ config('app.name') }}'s API" target="_blank"
                                 class="text-gray-400 hover:text-gray-300">API</a></li>
                     </ul>
                 </nav>
@@ -51,17 +56,16 @@
                                     d="M13 10V3L4 14h7v7l9-11h-7z" />
                             </svg>
                         </div>
-                        <span class="font-bold">StatusPulse</span>
+                        <span class="font-bold">{{ config('app.name') }}</span>
                     </div>
                 </div>
                 <div class="flex space-x-6 text-sm text-gray-400">
                     <a href="https://proisy.dev/contact" rel="noopener" target="_blank"
                         class="hover:text-gray-300">Contact</a>
-                    <a href="#" class="hover:text-gray-300">Privacy Policy</a>
-                    <a href="#" class="hover:text-gray-300">Terms of Service</a>
                 </div>
                 <div class="mt-4 md:mt-0 text-sm text-gray-500">
-                    2025 &copy; <a href="https://proisy.dev/?ref=pstatus.fr" target="_blank" rel="noopener">Christopher
+                    2025 &copy; <a href="https://proisy.dev/?ref={{ parse_url(config('app.url'), PHP_URL_HOST) }}"
+                        target="_blank" rel="noopener">Christopher
                         Proisy</a> — All rights reserved.
                 </div>
             </div>

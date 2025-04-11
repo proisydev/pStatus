@@ -14,15 +14,17 @@ class ApiController extends Controller
         $client = new Client();
 
         try {
-            $domain = Env::get("API_STATUS_URL");
 
-            $responseMonitors = $client->get($domain . "/api/monitors");
+            $responseMonitors = $client->get(config('services.api_status.get.api.monitors'));
             $dataMonitors = json_decode($responseMonitors->getBody(), true);
 
-            $responseHealth = $client->get( $domain . "/health");
-            $dataHealth = json_decode($responseHealth->getBody(), true);
+            $responseAccDetails = $client->get( config('services.api_status.get.api.account-details'));
+            if ($responseAccDetails->getStatusCode() !== 200) {
+                throw new \Exception('Failed to fetch account details');
+            }
+            $dataAccDetails = json_decode($responseAccDetails->getBody(), true);
 
-            return view('global_status', ['monitors' => $dataMonitors, 'health' => $dataHealth]);
+            return view('global_status', ['monitors' => $dataMonitors, 'account_details' => $dataAccDetails]);
         } catch (\Exception $e) {
             return view('api_error', ['error' => $e->getMessage()]);
         }
