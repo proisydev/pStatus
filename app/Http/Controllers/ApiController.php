@@ -26,7 +26,23 @@ class ApiController extends Controller
 
             return view('global_status', ['monitors' => $dataMonitors, 'account_details' => $dataAccDetails]);
         } catch (\Exception $e) {
-            return view('api_error', ['error' => $e->getMessage()]);
+            return view('errors/api_error', ['error' => $e->getMessage()]);
         }
     }
+
+    /*public function getIncidents(Request $request) {
+        $client = new Client();
+
+        try {
+            $responseIncidents = $client->get(config('services.api_status.get.api.incidents'));
+            if ($responseIncidents->getStatusCode() !== 200) {
+                throw new \Exception('Failed to fetch incidents');
+            }
+            $dataIncidents = json_decode($responseIncidents->getBody(), true);
+
+            return view('incidents', ['incidents' => $dataIncidents]);
+        } catch (\Exception $e) {
+            return view('errors/api_error', ['error' => $e->getMessage()]);
+        }
+    }*/
 }

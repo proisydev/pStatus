@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'All monitors')
+@section('title', 'Status')
 
 @section('content')
     <div class="mb-10 text-center">

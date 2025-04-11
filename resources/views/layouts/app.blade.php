@@ -26,10 +26,11 @@
                 </div>
                 <nav>
                     <ul class="flex space-x-6">
-                        <li><a href="{{ config('app.url') }}" class="text-violet-400 hover:text-violet-300">All
-                                monitors</a></li>
-                        <li><a href="{{ config('app.url') }}/incidents"
-                                class="text-gray-400 hover:text-gray-300">Incidents</a></li>
+                        <li><a href="{{ config('app.url') }}/status" class="text-violet-400 hover:text-violet-300"
+                                title="Status" rel="noopener">Status</a></li>
+                        <!--<li><a href="{{ config('app.url') }}/incidents" class="text-gray-400 hover:text-gray-300"
+                                title="Incidents " rel="noopener">Incidents</a>
+                        </li>-->
                         <li><a href="https://docs.{{ parse_url(config('app.url'), PHP_URL_HOST) }}" rel="noopener"
                                 title="{{ config('app.name') }}'s API" target="_blank"
                                 class="text-gray-400 hover:text-gray-300">API</a></li>
