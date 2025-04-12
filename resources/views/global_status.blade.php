@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
 @section('title', 'Status')
+@section('description', 'Stay updated with the latest service status and uptime reports for all monitors on ' .
+    config('app.name') . '. Check real-time operational updates and performance insights.')
 
 @section('content')
     <div class="mb-10 text-center">

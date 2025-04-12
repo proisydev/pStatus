@@ -2,10 +2,34 @@
 <html lang="en" class="dark">
 
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
     <title>@yield('title', 'Undefined') — {{ config('app.name') }}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="@yield('description', 'Status page for all your services')">
+    <meta name="title" content="@yield('title', 'Undefined') — {{ config('app.name') }}" />
+    <meta property="og:title" content="@yield('title', 'Undefined') — {{ config('app.name') }}" />
+    <meta property="twitter:title" content="@yield('title', 'Undefined') — {{ config('app.name') }}" />
+    <meta name="description" content="@yield('description', 'Description undefined')">
+    <meta property="og:description" content="@yield('description', 'Description undefined')" />
+    <meta property="twitter:description" content="@yield('description', 'Description undefined')" />
+
+    <meta property="twitter:url" content="{{ config('app.url') . parse_url(url()->current(), PHP_URL_PATH) }}" />
+    <meta property="og:url" content="{{ config('app.url') . parse_url(url()->current(), PHP_URL_PATH) }}" />
+    <link rel="canonical" href="{{ config('app.url') . parse_url(url()->current(), PHP_URL_PATH) }}">
+    <meta property="og:type" content="website" />
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="og:image"
+        content="https://proisy.dev/api/image-open-graph?title=@yield('title', 'Undefined')&page={{ config('app.url') . parse_url(url()->current(), PHP_URL_PATH) }}" />
+    <meta property="twitter:image"
+        content="https://proisy.dev/api/image-open-graph?title=@yield('title', 'Undefined')&page={{ config('app.url') . parse_url(url()->current(), PHP_URL_PATH) }}" />
+
+
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="pStatus" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
     <script src="{{ mix('js/app.js') }}" defer></script>
 </head>
@@ -15,12 +39,9 @@
         <div class="container mx-auto px-4 py-4">
             <div class="flex justify-between items-center">
                 <div class="flex items-center space-x-2">
-                    <div class="h-8 w-8 rounded-full bg-violet-600 flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M13 10V3L4 14h7v7l9-11h-7z" />
-                        </svg>
+                    <div class="flex items-center justify-center">
+                        <img src="{{ asset('icon.png') }}" alt="{{ config('app.name') }} Logo"
+                            class="h-8 w-8 rounded-full" draggable="false" />
                     </div>
                     <span class="text-xl font-bold">{{ config('app.name') }}</span>
                 </div>
@@ -50,12 +71,9 @@
             <div class="flex flex-col md:flex-row justify-between items-center">
                 <div class="mb-4 md:mb-0">
                     <div class="flex items-center space-x-2">
-                        <div class="h-6 w-6 rounded-full bg-violet-600 flex items-center justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M13 10V3L4 14h7v7l9-11h-7z" />
-                            </svg>
+                        <div class=" flex items-center justify-center">
+                            <img src="{{ asset('icon.png') }}" alt="{{ config('app.name') }} Logo"
+                                class="h-6 w-6 rounded-full" draggable="false" />
                         </div>
                         <span class="font-bold">{{ config('app.name') }}</span>
                     </div>
