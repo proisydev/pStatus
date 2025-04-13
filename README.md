@@ -29,7 +29,7 @@
 1. **Clone the repository**:
 
     ```bash
-    git clone https://github.com/proisydev/pStatus.git
+    git clone https://github.com/proisydev/pStatus.git [for download] or git pull origin main [for update]
     cd pStatus
     ```
 

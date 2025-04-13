@@ -56,7 +56,14 @@ class ApiController extends Controller
             $responsePublicPage = $client->get($publicPageUrl);
             $dataPublicPage = json_decode($responsePublicPage->getBody(), true);
 
-            if (isset($dataPublicPage['data']['psps'][0]['monitors']) && in_array($id, $dataPublicPage['data']['psps'][0]['monitors'])) {
+            // Validate the structure of the API response
+            if (!isset($dataPublicPage['data']['psps']) || empty($dataPublicPage['data']['psps'])) {
+                throw new \Exception('Invalid API response structure');
+            }
+
+            $monitors = $dataPublicPage['data']['psps'][0]['monitors'] ?? [];
+
+            if (in_array($id, $monitors)) {
                 $idPublicPage = str_replace(config('services.api_status.ur_stats'), '', $dataPublicPage['data']['psps'][0]['standard_url']);
                 $specificMonitorUrl = config('services.api_status.get.api.specific_monitor');
 
