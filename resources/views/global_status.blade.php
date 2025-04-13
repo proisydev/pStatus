@@ -16,15 +16,18 @@
                         $downMonitors = $account_details['data']['account']['down_monitors'] ?? 0;
                         $totalMonitors = $account_details['data']['account']['total_monitors_count'] ?? 0;
 
-                        if ($downMonitors > 0 && $upMonitors < $totalMonitors) {
-                            $statusMessage = 'Some services are offline.';
+                        if ($downMonitors > 0 && ($upMonitors / $totalMonitors) * 100 < 80) {
+                            $statusMessage = 'Some systems are offline.';
                             $statusClass = 'text-red-500';
-                        } elseif ($upMonitors < $totalMonitors) {
-                            $statusMessage = 'Some services have been degraded.';
+                        } elseif (($upMonitors / $totalMonitors) * 100 < 50) {
+                            $statusMessage = 'Some systems have been degraded.';
                             $statusClass = 'text-yellow-500';
+                        } elseif ($downMonitors === $totalMonitors) {
+                            $statusMessage = 'All systems offline.';
+                            $statusClass = 'text-red-500';
                         } else {
-                            $statusMessage = 'All services are operational.';
-                            $statusClass = 'text-green-500';
+                            $statusMessage = 'All systems operational.';
+                            $statusClass = 'text-violet-500';
                         }
                     @endphp
 
@@ -33,7 +36,7 @@
                 <p class="text-gray-400 text-sm mt-2">{{ $upMonitors }} online — {{ $downMonitors }} offline</p>
                 </p>
             @else
-                <p>Aucune idée...</p>
+                <p>I've no idea...</p>
             @endif
         </div>
     </div>
@@ -43,7 +46,8 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             @if (isset($monitors['data']['monitors']) && count($monitors['data']['monitors']) > 0)
                 @foreach ($monitors['data']['monitors'] as $monitor)
-                    <a href="monitor-details.html" class="group">
+                    <a href="{{ config('app.url') }}/monitor/{{ $monitor['id'] }}"
+                        title="See {{ $monitor['friendly_name'] }}'s details" rel="noopener" class="group">
                         <div
                             class="bg-gray-900 rounded-lg p-5 border border-gray-800 hover:border-violet-600 transition-all duration-300 hover:shadow-[0_0_15px_rgba(124,58,237,0.15)] h-full flex flex-col">
                             <div class="flex justify-between items-start mb-4">

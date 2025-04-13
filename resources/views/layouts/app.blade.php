@@ -39,22 +39,36 @@
         <div class="container mx-auto px-4 py-4">
             <div class="flex justify-between items-center">
                 <div class="flex items-center space-x-2">
-                    <div class="flex items-center justify-center">
+                    <a href="{{ config('app.url') }}/status" rel="noopener"
+                        title="{{ config('app.name') }} Status Page" class="flex items-center space-x-2">
                         <img src="{{ asset('icon.png') }}" alt="{{ config('app.name') }} Logo"
                             class="h-8 w-8 rounded-full" draggable="false" />
-                    </div>
-                    <span class="text-xl font-bold">{{ config('app.name') }}</span>
+                        <span class="text-xl font-bold">{{ config('app.name') }}</span>
+                    </a>
                 </div>
                 <nav>
                     <ul class="flex space-x-6">
-                        <li><a href="{{ config('app.url') }}/status" class="text-violet-400 hover:text-violet-300"
-                                title="Status" rel="noopener">Status</a></li>
-                        <!--<li><a href="{{ config('app.url') }}/incidents" class="text-gray-400 hover:text-gray-300"
-                                title="Incidents " rel="noopener">Incidents</a>
+                        <li>
+                            <a href="{{ config('app.url') }}/status"
+                                class="{{ request()->is('status') ? 'text-violet-400 hover:text-violet-300' : 'text-gray-400 hover:text-gray-300' }}"
+                                title="Status" rel="noopener">Status</a>
+                        </li>
+                        <li>
+                            <span
+                                class="{{ request()->is('monitor/*') ? 'text-violet-400 hover:text-violet-300' : 'text-gray-400 hover:text-gray-300' }}">
+                                Monitor
+                            </span>
+                        </li>
+                        <!--<li>
+                            <a href="{{ config('app.url') }}/incidents"
+                               class="{{ request()->is('incidents') ? 'text-violet-400 hover:text-violet-300' : 'text-gray-400 hover:text-gray-300' }}"
+                               title="Incidents" rel="noopener">Incidents</a>
                         </li>-->
-                        <li><a href="https://docs.{{ parse_url(config('app.url'), PHP_URL_HOST) }}" rel="noopener"
-                                title="{{ config('app.name') }}'s API" target="_blank"
-                                class="text-gray-400 hover:text-gray-300">API</a></li>
+                        <li>
+                            <a href="https://docs.{{ parse_url(config('app.url'), PHP_URL_HOST) }}"
+                                class="text-gray-400 hover:text-gray-300" title="{{ config('app.name') }}'s API"
+                                target="_blank" rel="noopener">API</a>
+                        </li>
                     </ul>
                 </nav>
             </div>

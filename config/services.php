@@ -37,13 +37,14 @@ return [
 
     'api_status' => [
         'url' => env('API_STATUS_URL'),
+        'ur_stats' => "https://stats.uptimerobot.com/",
         'get' => [
             'api' => [
                 "monitors" => env('API_STATUS_URL') . '/api/monitors',
-                "account-details" => env('API_STATUS_URL') . '/api/account-details',
-                "public-pages" => env('API_STATUS_URL') . '/api/public-pages',
-                "specific-monitor" => env('API_STATUS_URL') . '/api/monitors/{page_id}/{monitor_id}',
-                "clear-cache" => env('API_STATUS_URL') . '/api/clear-cache',
+                "account_details" => env('API_STATUS_URL') . '/api/account-details',
+                "public_pages" => env('API_STATUS_URL') . '/api/public-pages',
+                "specific_monitor" => env('API_STATUS_URL') . '/api/monitor/{page_id}/{monitor_id}',
+                "clear_cache" => env('API_STATUS_URL') . '/api/clear-cache',
             ],
             "health" => env('API_STATUS_URL') . '/health',
             "metrics" => env('API_STATUS_URL') . '/metrics',

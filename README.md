@@ -29,8 +29,8 @@
 1. **Clone the repository**:
 
     ```bash
-    git clone <repository-url>
-    cd webstatus
+    git clone https://github.com/proisydev/pStatus.git
+    cd pStatus
     ```
 
 2. **Install PHP dependencies**:
