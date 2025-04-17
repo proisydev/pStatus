@@ -2,7 +2,7 @@
 
 ## About This Project
 
-**pStatus** is a modern Laravel-based web application designed to monitor and display the status of various web services. It provides a user-friendly interface, real-time monitoring, and customizable features to suit developers and system administrators.
+**watchStatus** is a modern Laravel-based web application designed to monitor and display the status of various web services. It provides a user-friendly interface, real-time monitoring, and customizable features to suit developers and system administrators.
 
 ## Features
 
@@ -29,8 +29,8 @@
 1. **Clone the repository**:
 
     ```bash
-    git clone https://github.com/proisydev/pStatus.git [for download] or git pull origin main [for update]
-    cd pStatus
+    git clone https://github.com/proisydev/watchStatus.git [for download] or git pull origin main [for update]
+    cd watchStatus
     ```
 
 2. **Install PHP dependencies**:
@@ -98,7 +98,7 @@ To install this project on a shared hosting environment such as cPanel, follow t
 4. Set the appropriate permissions for the storage and cache directories.
 5. In your console, type:
     ```bash
-    ln -s $HOME/public_html/pstatus/laravel/storage/app/public $HOME/public_html/pstatus/web/storage
+    ln -s $HOME/public_html/watchStatus/laravel/storage/app/public $HOME/public_html/watchStatus/web/storage
     ```
     to create a symlink.
 6. Edit your `index.php` file and add `__DIR__.'/../laravel/'` before the location folder path.
@@ -106,7 +106,7 @@ To install this project on a shared hosting environment such as cPanel, follow t
 
 The cPanel folder hierarchy should look like this:
 
--   pstatus/
+-   watchStatus/
     -   web/ [contains all public files]
     -   laravel/ [contains the Laravel project and vendor folder]
 
@@ -130,7 +130,7 @@ We welcome contributions to this project! If you would like to contribute, pleas
 
 ## Security Vulnerabilities
 
-If you discover a security vulnerability, please report it by sending an email to [security@pstatus.fr](mailto:security@pstatus.fr). We will address all security issues promptly.
+If you discover a security vulnerability, please report it by sending an email to [security@watchStatus.fr](mailto:security@watchStatus.fr). We will address all security issues promptly.
 
 ## License
 
