@@ -34,27 +34,16 @@ jobs:
       - name: "Public Assets Deployment"
         run: |
           lftp -u "$FTP_USERNAME","$FTP_PASSWORD" -p "$FTP_PORT" "$FTP_HOST" <<EOF
-            # Show hidden files
-            set ftp:list-options -a
+          set ftp:list-options -a
+          set cmd:fail-exit yes
+          set mirror:parallel-transfer-count 8
 
-            # Exit on any error
-            set cmd:fail-exit yes
+          # 1. Mirror public/ → public_html/
+          mirror --reverse --delete \
+              --exclude-glob mix-manifest.json \
+              public/ $FTP_PUBLIC_HTML
 
-            # Enable parallel transfers (up to 8)
-            set mirror:parallel-transfer-count 8
-
-            # 1. Mirror public/ → public_html/
-            mirror --reverse --delete \
-                --exclude-glob mix-manifest.json \
-                public/ $FTP_PUBLIC_HTML
-
-            # 2. Clean FTP_LARAVEL_DIR/public/ except mix-manifest.json
-            cd $FTP_LARAVEL_DIR/public
-            cls -1 | grep -v '^mix-manifest.json$' | while read file; do
-                rm -r "$file"
-            done
-
-            bye
+          bye
           EOF
         env:
           FTP_HOST: ${{ secrets.FTP_HOST }}
@@ -62,4 +51,22 @@ jobs:
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
           FTP_PUBLIC_HTML: ${{ secrets.FTP_PUBLIC_HTML }}
+
+        # 4) Delete public files on LARAVEL_DIR/public (except mix-manifest.json)
+      - name: "Clean Laravel public/ folder"
+        run: |
+          lftp -u "$FTP_USERNAME","$FTP_PASSWORD" -p "$FTP_PORT" "$FTP_HOST" <<EOF
+          set ftp:list-options -a
+          set cmd:fail-exit yes
+          open "$FTP_HOST"
+          cd $FTP_LARAVEL_DIR/public
+          cls -1
+          bye
+          EOF
+        env:
+          FTP_HOST: ${{ secrets.FTP_HOST }}
+          FTP_PORT: ${{ secrets.FTP_PORT }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
           FTP_LARAVEL_DIR: ${{ secrets.FTP_LARAVEL_DIR }}
+        continue-on-error: true
