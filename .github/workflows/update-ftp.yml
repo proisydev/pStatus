@@ -33,26 +33,23 @@ jobs:
       # 3) Deploy public assets via lftp (and clean Laravel public folder)
       - name: "Deploy Public Assets & Clean Laravel Public"
         run: |
-          lftp -u "$FTP_USERNAME","$FTP_PASSWORD" -p "$FTP_PORT" "$FTP_HOST" <<EOF
-          set ftp:list-options -a
-          set cmd:fail-exit yes
-          set mirror:parallel-transfer-count 8
+          lftp -u "$FTP_USERNAME","$FTP_PASSWORD" -p "$FTP_PORT" "$FTP_HOST" -e "
+          set ftp:list-options -a;
+          set cmd:fail-exit yes;
+          set mirror:parallel-transfer-count 8;
 
-          # 1. Mirror local public/ → remote public_html/
+          # 1. Upload public/ to public_html/, excluding mix-manifest.json
           mirror --reverse --delete \
               --exclude-glob mix-manifest.json \
-              public/ $FTP_PUBLIC_HTML
+              public/ $FTP_PUBLIC_HTML;
 
-          # 2. Clean Laravel public folder (keep only mix-manifest.json)
-          cd $FTP_LARAVEL_DIR/public
-
-          # List all files/folders except mix-manifest.json and delete them
-          cls -1 | grep -v '^mix-manifest.json$' | while read item; do
-            rm -r "$item"
-          done
-
+          # 2. Clean Laravel public/ folder except mix-manifest.json
+          cd $FTP_LARAVEL_DIR/public;
+            cls -1 | grep -v '^mix-manifest\.json$' | while read file; do
+                rm -r \"\$file\";
+            done;
           bye
-          EOF
+          "
         env:
           FTP_HOST: ${{ secrets.FTP_HOST }}
           FTP_PORT: ${{ secrets.FTP_PORT }}
