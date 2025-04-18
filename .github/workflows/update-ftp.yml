@@ -23,7 +23,6 @@ jobs:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: "./"
           server-dir: ${{ secrets.FTP_LARAVEL_DIR }}
 
       # 3) Deploy public assets via lftp (exclude mix-manifest.json)
