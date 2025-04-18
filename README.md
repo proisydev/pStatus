@@ -130,7 +130,7 @@ We welcome contributions to this project! If you would like to contribute, pleas
 
 ## Security Vulnerabilities
 
-If you discover a security vulnerability, please report it by sending an email to [security@watchStatus.fr](mailto:security@watchStatus.fr). We will address all security issues promptly.
+If you discover a security vulnerability, please report it by sending an email to [security@watchstat.us](mailto:security@watchstat.us). We will address all security issues promptly.
 
 ## License
 
