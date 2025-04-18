@@ -176,153 +176,164 @@
             </div>
         </div>
     </div>
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-        @php
-            $responseValues = array_column($responseTimes, 'value');
-            $average = number_format(array_sum($responseValues) / count($responseValues), 2);
-            $minimum = min($responseValues);
-            $maximum = max($responseValues);
-            sort($responseValues);
-            $percentile90Index = (int) ceil(0.9 * count($responseValues)) - 1;
-            $percentile90 = $responseValues[$percentile90Index];
-        @endphp
-        <div class="lg:col-span-2">
-            <div class="bg-gray-900 rounded-lg border border-gray-800 p-6 h-full flex flex-col">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-lg font-semibold">Response Time (Last 24 Hours)</h2>
-                    <div class="flex items-center space-x-4">
-                        <div>
-                            <span class="text-xs text-gray-400">Min:</span>
-                            <span
-                                class="text-sm font-medium ml-1">{{ min(array_column($responseTimes, 'value')) }}ms</span>
-                        </div>
-                        <div>
-                            <span class="text-xs text-gray-400">Avg:</span>
-                            <span
-                                class="text-sm font-medium ml-1">{{ number_format(array_sum(array_column($responseTimes, 'value')) / count($responseTimes), 2) }}ms</span>
-                        </div>
-                        <div>
-                            <span class="text-xs text-gray-400">Max:</span>
-                            <span
-                                class="text-sm font-medium ml-1">{{ max(array_column($responseTimes, 'value')) }}ms</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="h-48 relative flex-grow">
-                    <svg class="w-full h-full" viewBox="0 0 24 100" preserveAspectRatio="none">
-                        <line x1="0" y1="0" x2="24" y2="0" stroke="#374151"
-                            stroke-width="0.5" />
-                        <line x1="0" y1="25" x2="24" y2="25" stroke="#374151"
-                            stroke-width="0.5" />
-                        <line x1="0" y1="50" x2="24" y2="50" stroke="#374151"
-                            stroke-width="0.5" />
-                        <line x1="0" y1="75" x2="24" y2="75" stroke="#374151"
-                            stroke-width="0.5" />
-                        <line x1="0" y1="100" x2="24" y2="100" stroke="#374151"
-                            stroke-width="0.5" />
-                        @php
-                            $points = [];
-                            $maxValue = max(array_column($responseTimes, 'value'));
-                            foreach ($responseTimes as $index => $response) {
-                                $x = ($index / (count($responseTimes) - 1)) * 24;
-                                $y = 100 - ($response['value'] / $maxValue) * 100;
-                                $points[] = "{$x},{$y}";
-                            }
-                        @endphp
-                        <path d="M{{ implode(' ', $points) }}" fill="none" stroke="#8b5cf6" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round" />
-                        <path d="M{{ implode(' ', $points) }} V100 H0 Z" fill="url(#gradient)" opacity="0.2" />
-                        <defs>
-                            <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" stop-color="#8b5cf6" stop-opacity="1" />
-                                <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0" />
-                            </linearGradient>
-                        </defs>
-                    </svg>
-                    <div class="flex justify-between text-xs text-gray-500 mt-2">
-                        @foreach ($responseTimes as $index => $response)
-                            @if ($index % (int) ceil(count($responseTimes) / 5) === 0)
-                                <span>{{ \Carbon\Carbon::parse($response['datetime'])->format('h A') }}</span>
-                            @endif
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div>
-            <div class="bg-gray-900 rounded-lg border border-gray-800 p-6 h-full flex flex-col">
-                <h2 class="text-lg font-semibold mb-4">Response Time Stats</h2>
-                <div class="space-y-3 flex-grow">
-                    <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-400">Average</span>
-                        <span class="font-medium">{{ $average }}ms</span>
-                    </div>
-
-                    <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-400">Minimum</span>
-                        <span class="font-medium">{{ $minimum }}ms</span>
-                    </div>
-
-                    <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-400">Maximum</span>
-                        <span class="font-medium">{{ $maximum }}ms</span>
-                    </div>
-
-                    <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-400">90th Percentile</span>
-                        <span class="font-medium">{{ $percentile90 }}ms</span>
-                    </div>
-                </div>
-                <div class="mt-auto pt-4 border-t border-gray-800">
-                    <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-400">Last Check</span>
-                        <span class="font-medium">{{ $responseTimes[count($responseTimes) - 1]['datetime'] }}</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="bg-gray-900 rounded-lg border border-gray-800 p-6">
-        <h2 class="text-lg font-semibold mb-4">Logs</h2>
-        <div class="space-y-6">
-            @foreach ($logs as $log)
-                @php
-                    $logClass =
-                        $log['class'] === 'success'
-                            ? 'border-green-500 bg-green-900/30 text-green-300'
-                            : ($log['class'] === 'danger'
-                                ? 'border-red-500 bg-red-900/30 text-red-300'
-                                : 'border-yellow-500 bg-yellow-900/30 text-yellow-300');
-                @endphp
-                <div class="border-l-2 {{ explode(' ', $logClass)[0] }} pl-4">
-                    <div class="flex items-center mb-2">
-                        <h3 class="font-medium">{{ $log['label'] }}</h3>
-                        <span
-                            class="ml-3 px-2 py-1 {{ explode(' ', $logClass)[1] }} {{ explode(' ', $logClass)[2] }} text-xs rounded-full">
-                            {{ $log['class'] === 'success' ? 'Resolved' : 'Issue' }}
-                        </span>
-                    </div>
-                    <p class="text-sm text-gray-400 mb-3">{{ $log['date'] }} ({{ $log['duration'] }})</p>
-
-                    <div class="space-y-3 text-sm">
-                        <div class="flex">
-                            <span class="text-gray-500 w-20 flex-shrink-0">Code:</span>
-                            <p>{{ $log['reason']['code'] }}</p>
-                        </div>
-                        <div class="flex">
-                            <span class="text-gray-500 w-20 flex-shrink-0">Short:</span>
-                            <p>{{ $log['reason']['detail']['short'] }}</p>
-                        </div>
-                        @if (isset($log['reason']['detail']['full']))
-                            <div class="flex">
-                                <span class="text-gray-500 w-20 flex-shrink-0">Details:</span>
-                                <p>{{ $log['reason']['detail']['full'] }}</p>
+    @if (!empty($responseTimes)) {
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+            @php
+                if (!empty($responseTimes)) {
+                    $responseValues = array_column($responseTimes, 'value');
+                    $average = number_format(array_sum($responseValues) / count($responseValues), 2);
+                    $minimum = min($responseValues);
+                    $maximum = max($responseValues);
+                    sort($responseValues);
+                    $percentile90Index = (int) ceil(0.9 * count($responseValues)) - 1;
+                    $percentile90 = $responseValues[$percentile90Index];
+                }
+            @endphp
+            <div class="lg:col-span-2">
+                <div class="bg-gray-900 rounded-lg border border-gray-800 p-6 h-full flex flex-col">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg font-semibold">Response Time (Last 24 Hours)</h2>
+                        <div class="flex items-center space-x-4">
+                            <div>
+                                <span class="text-xs text-gray-400">Min:</span>
+                                <span
+                                    class="text-sm font-medium ml-1">{{ min(array_column($responseTimes, 'value')) }}ms</span>
                             </div>
-                        @endif
+                            <div>
+                                <span class="text-xs text-gray-400">Avg:</span>
+                                <span
+                                    class="text-sm font-medium ml-1">{{ number_format(array_sum(array_column($responseTimes, 'value')) / count($responseTimes), 2) }}ms</span>
+                            </div>
+                            <div>
+                                <span class="text-xs text-gray-400">Max:</span>
+                                <span
+                                    class="text-sm font-medium ml-1">{{ max(array_column($responseTimes, 'value')) }}ms</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="h-48 relative flex-grow">
+                        <svg class="w-full h-full" viewBox="0 0 24 100" preserveAspectRatio="none">
+                            <line x1="0" y1="0" x2="24" y2="0" stroke="#374151"
+                                stroke-width="0.5" />
+                            <line x1="0" y1="25" x2="24" y2="25" stroke="#374151"
+                                stroke-width="0.5" />
+                            <line x1="0" y1="50" x2="24" y2="50" stroke="#374151"
+                                stroke-width="0.5" />
+                            <line x1="0" y1="75" x2="24" y2="75" stroke="#374151"
+                                stroke-width="0.5" />
+                            <line x1="0" y1="100" x2="24" y2="100" stroke="#374151"
+                                stroke-width="0.5" />
+                            @php
+                                $points = [];
+                                $maxValue = max(array_column($responseTimes, 'value'));
+                                foreach ($responseTimes as $index => $response) {
+                                    $x = ($index / (count($responseTimes) - 1)) * 24;
+                                    $y = 100 - ($response['value'] / $maxValue) * 100;
+                                    $points[] = "{$x},{$y}";
+                                }
+                            @endphp
+                            <path d="M{{ implode(' ', $points) }}" fill="none" stroke="#8b5cf6" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M{{ implode(' ', $points) }} V100 H0 Z" fill="url(#gradient)" opacity="0.2" />
+                            <defs>
+                                <linearGradient id="gradient" x1="0%" y1="0%" x2="0%"
+                                    y2="100%">
+                                    <stop offset="0%" stop-color="#8b5cf6" stop-opacity="1" />
+                                    <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <div class="flex justify-between text-xs text-gray-500 mt-2">
+                            @foreach ($responseTimes as $index => $response)
+                                @if ($index % (int) ceil(count($responseTimes) / 5) === 0)
+                                    <span>{{ \Carbon\Carbon::parse($response['datetime'])->format('h A') }}</span>
+                                @endif
+                            @endforeach
+                        </div>
                     </div>
                 </div>
-            @endforeach
+            </div>
+            <div>
+                <div class="bg-gray-900 rounded-lg border border-gray-800 p-6 h-full flex flex-col">
+                    <h2 class="text-lg font-semibold mb-4">Response Time Stats</h2>
+                    <div class="space-y-3 flex-grow">
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-400">Average</span>
+                            <span class="font-medium">{{ $average }}ms</span>
+                        </div>
+
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-400">Minimum</span>
+                            <span class="font-medium">{{ $minimum }}ms</span>
+                        </div>
+
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-400">Maximum</span>
+                            <span class="font-medium">{{ $maximum }}ms</span>
+                        </div>
+
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-400">90th Percentile</span>
+                            <span class="font-medium">{{ $percentile90 }}ms</span>
+                        </div>
+                    </div>
+                    <div class="mt-auto pt-4 border-t border-gray-800">
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-400">Last Check</span>
+                            <span class="font-medium">{{ $responseTimes[count($responseTimes) - 1]['datetime'] }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
+        }
+    @endif
+    @if (!empty($logs)) {
+        <div class="bg-gray-900 rounded-lg border border-gray-800 p-6">
+            <h2 class="text-lg font-semibold mb-4">Logs</h2>
+            <div class="space-y-6">
+                @foreach ($logs as $log)
+                    @php
+                        if (!empty($log)) {
+                            $logClass =
+                                $log['class'] === 'success'
+                                    ? 'border-green-500 bg-green-900/30 text-green-300'
+                                    : ($log['class'] === 'danger'
+                                        ? 'border-red-500 bg-red-900/30 text-red-300'
+                                        : 'border-yellow-500 bg-yellow-900/30 text-yellow-300');
+                        }
+                    @endphp
+                    <div class="border-l-2 {{ explode(' ', $logClass)[0] }} pl-4">
+                        <div class="flex items-center mb-2">
+                            <h3 class="font-medium">{{ $log['label'] }}</h3>
+                            <span
+                                class="ml-3 px-2 py-1 {{ explode(' ', $logClass)[1] }} {{ explode(' ', $logClass)[2] }} text-xs rounded-full">
+                                {{ $log['class'] === 'success' ? 'Resolved' : 'Issue' }}
+                            </span>
+                        </div>
+                        <p class="text-sm text-gray-400 mb-3">{{ $log['date'] }} ({{ $log['duration'] }})</p>
+
+                        <div class="space-y-3 text-sm">
+                            <div class="flex">
+                                <span class="text-gray-500 w-20 flex-shrink-0">Code:</span>
+                                <p>{{ $log['reason']['code'] }}</p>
+                            </div>
+                            <div class="flex">
+                                <span class="text-gray-500 w-20 flex-shrink-0">Short:</span>
+                                <p>{{ $log['reason']['detail']['short'] }}</p>
+                            </div>
+                            @if (isset($log['reason']['detail']['full']))
+                                <div class="flex">
+                                    <span class="text-gray-500 w-20 flex-shrink-0">Details:</span>
+                                    <p>{{ $log['reason']['detail']['full'] }}</p>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+        }
+    @endif
 @endsection
