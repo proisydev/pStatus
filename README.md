@@ -4,6 +4,8 @@
 
 **watchStatus** is a modern Laravel-based web application designed to monitor and display the status of various web services. It provides a user-friendly interface, real-time monitoring, and customizable features to suit developers and system administrators.
 
+[![Update via FTP](https://github.com/proisydev/watchStatus/actions/workflows/update-ftp.yml/badge.svg?branch=main&event=workflow_run)](https://github.com/proisydev/watchStatus/actions/workflows/update-ftp.yml)
+
 ## Features
 
 -   **Real-Time Monitoring**: Displays the status of services (online, offline, or degraded).

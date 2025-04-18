@@ -1,62 +1,55 @@
-name: Update via FTP
+name: "Update Web App with FTP"
 
 on:
   push:
-    branches:
-      - main
-    paths:
-      - "resources/**"
-      - "routes/**"
-      - "public/**"
-      - "config/**"
-      - "app/**"
-      - "composer.json"
-      - "database/**"
-      - "artisan"
-      - "package.json"
-      - "storage/**"
-      - "webpack.mix.js"
-      - "tailwind.config.js"
+    branches: [main]
 
 jobs:
   deploy:
-    name: Update via FTP
+    name: Deploy to FTP Server
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the repository
+      # 1) Checkout repository
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      # Install lftp for FTP operations
-      - name: Install lftp
-        run: sudo apt-get install -y lftp
+      # 2) Deploy Laravel application (exclude everything except mix-manifest.json)
+      - name: "Laravel App Deployment"
+        uses: SamKirkland/FTP-Deploy-Action@v4
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: "./"
+          server-dir: ${{ secrets.FTP_LARAVEL_DIR }}
+          exclude: |
+            **/*
 
-      # Sync files to FTP server
-      - name: Deploy Changed Files to FTP
+      # 3) Deploy public assets via lftp (exclude mix-manifest.json)
+      - name: "Public Assets Deployment"
+        run: |
+          lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_HOST" <<EOF
+            # Show hidden files
+            set ftp:list-options -a
+
+            # Exit on any error
+            set cmd:fail-exit yes
+
+            # Enable parallel transfers (up to 8)
+            set mirror:parallel-transfer-count 8
+
+            # Mirror local public/ to remote public_html/, excluding mix-manifest.json
+            mirror --reverse --delete \
+              --exclude-glob mix-manifest.json \
+              public/ $FTP_PUBLIC_HTML
+
+            bye
+          EOF
         env:
           FTP_HOST: ${{ secrets.FTP_HOST }}
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
           FTP_PUBLIC_HTML: ${{ secrets.FTP_PUBLIC_HTML }}
-        run: |
-          # Get the list of files changed in the last commit
-          CHANGED_FILES=$(git diff-tree --no-commit-id --name-only -r HEAD)
-
-          # Sync all changed files to the Laravel directory on the FTP server
-          for FILE in $CHANGED_FILES; do
-            lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_HOST" -e "
-            put -O $FTP_PUBLIC_HTML/$FILE $FILE;
-            bye
-            "
-          done
-
-          # Check if any files in the /public folder were changed
-          if echo "$CHANGED_FILES" | grep -q "^public/"; then
-            # Sync only the /public folder excluding mix-manifest.json to public_html
-            lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_HOST" -e "
-            mirror --reverse --delete --exclude mix-manifest.json ./public $FTP_PUBLIC_HTML;
-            bye
-            "
-          fi
-          "
