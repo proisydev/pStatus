@@ -30,18 +30,23 @@ jobs:
       - name: Install lftp
         run: sudo apt-get update && sudo apt-get install -y lftp
 
-      # 3) Deploy public assets via lftp (exclude mix-manifest.json)
-      - name: "Public Assets Deployment"
+      # 3) Deploy public assets via lftp (and clean Laravel public folder)
+      - name: "Deploy Public Assets & Clean Laravel Public"
         run: |
           lftp -u "$FTP_USERNAME","$FTP_PASSWORD" -p "$FTP_PORT" "$FTP_HOST" <<EOF
           set ftp:list-options -a
           set cmd:fail-exit yes
           set mirror:parallel-transfer-count 8
 
-          # 1. Mirror public/ → public_html/
+          # 1. Mirror local public/ → remote public_html/
           mirror --reverse --delete \
               --exclude-glob mix-manifest.json \
               public/ $FTP_PUBLIC_HTML
+
+          # 2. Clean Laravel public folder (keep only mix-manifest.json)
+          cd $FTP_LARAVEL_DIR/public
+          # Liste les fichiers sauf mix-manifest.json et les supprime
+          foreach f in *; if [ "\$f" != "mix-manifest.json" ]; rm -r "\$f"; end
 
           bye
           EOF
@@ -51,22 +56,4 @@ jobs:
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
           FTP_PUBLIC_HTML: ${{ secrets.FTP_PUBLIC_HTML }}
-
-        # 4) Delete public files on LARAVEL_DIR/public (except mix-manifest.json)
-      - name: "Clean Laravel public/ folder"
-        run: |
-          lftp -u "$FTP_USERNAME","$FTP_PASSWORD" -p "$FTP_PORT" "$FTP_HOST" <<EOF
-          set ftp:list-options -a
-          set cmd:fail-exit yes
-          open "$FTP_HOST"
-          cd $FTP_LARAVEL_DIR/public
-          cls -1
-          bye
-          EOF
-        env:
-          FTP_HOST: ${{ secrets.FTP_HOST }}
-          FTP_PORT: ${{ secrets.FTP_PORT }}
-          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
-          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
           FTP_LARAVEL_DIR: ${{ secrets.FTP_LARAVEL_DIR }}
-        continue-on-error: true
