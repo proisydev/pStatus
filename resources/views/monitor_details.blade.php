@@ -32,9 +32,9 @@
                             $statusClass = 'bg-yellow-500 text-yellow-500';
                             $statusText = 'Degraded';
                             break;
-                        case 'error':
+                        case 'danger':
                             $statusClass = 'bg-red-500 text-red-500';
-                            $statusText = 'Outage';
+                            $statusText = 'Down';
                             break;
                         default:
                             $statusClass = 'bg-gray-500 text-gray-500';
