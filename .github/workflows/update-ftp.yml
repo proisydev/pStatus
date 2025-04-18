@@ -45,9 +45,11 @@ jobs:
 
           # 2. Clean Laravel public folder (keep only mix-manifest.json)
           cd $FTP_LARAVEL_DIR/public
-          # Liste les fichiers et dossiers, sauf mix-manifest.json, et les supprime
-          glob -a rm -r [!.]*
-          rm -r .htaccess || true  # si tu veux le garder aussi, adapte cette ligne
+
+          # List all files/folders except mix-manifest.json and delete them
+          cls -1 | grep -v '^mix-manifest.json$' | while read item; do
+            rm -r "$item"
+          done
 
           bye
           EOF
