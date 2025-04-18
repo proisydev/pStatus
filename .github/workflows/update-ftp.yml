@@ -45,9 +45,7 @@ jobs:
 
           # 2. Clean Laravel public/ folder except mix-manifest.json
           cd $FTP_LARAVEL_DIR/public;
-            cls -1 | grep -v '^mix-manifest\.json$' | while read file; do
-                rm -r \"\$file\";
-            done;
+          cls -1 | grep -v '^mix-manifest\.json$' | awk '{print "rm -r \"" $0 "\""}' | lftp -u \"$FTP_USERNAME\",\"$FTP_PASSWORD\" -p \"$FTP_PORT\" \"$FTP_HOST\" -e -
           bye
           "
         env:
