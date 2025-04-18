@@ -30,28 +30,32 @@ jobs:
       - name: Install lftp
         run: sudo apt-get update && sudo apt-get install -y lftp
 
-      # 3) Deploy public assets via lftp (and clean Laravel public folder)
-      - name: "Deploy Public Assets & Clean Laravel Public"
+        # 3) Deploy public assets via lftp (and clean Laravel public folder)
+        - name: "Deploy Public Assets & Clean Laravel Public"
         run: |
-          lftp -u "$FTP_USERNAME","$FTP_PASSWORD" -p "$FTP_PORT" "$FTP_HOST" -e "
-          set ftp:list-options -a;
-          set cmd:fail-exit yes;
-          set mirror:parallel-transfer-count 8;
+            lftp -u "$FTP_USERNAME","$FTP_PASSWORD" -p "$FTP_PORT" "$FTP_HOST" -e "
+            set ftp:list-options -a;
+            set cmd:fail-exit yes;
+            set mirror:parallel-transfer-count 8;
 
-          # 1. Upload public/ to public_html/, excluding mix-manifest.json
-          mirror --reverse --delete \
-              --exclude-glob mix-manifest.json \
-              public/ $FTP_PUBLIC_HTML;
+            # 1. Upload public/ to public_html/, excluding mix-manifest.json
+            mirror --reverse --delete \
+            --exclude-glob mix-manifest.json \
+            public/ $FTP_PUBLIC_HTML;
 
-          # 2. Clean Laravel public/ folder except mix-manifest.json
-          cd $FTP_LARAVEL_DIR/public;
-          cls -1 | grep -v '^mix-manifest\.json$' | awk '{print "rm -r \"" $0 "\""}' | lftp -u \"$FTP_USERNAME\",\"$FTP_PASSWORD\" -p \"$FTP_PORT\" \"$FTP_HOST\" -e -
-          bye
-          "
+            # 2. Clean Laravel public/ folder except mix-manifest.json
+            cd $FTP_LARAVEL_DIR/public;
+            for file in $(cls -1); do
+            if [ \"$file\" != \"mix-manifest.json\" ]; then
+            rm -r \"$file\";
+            fi;
+            done;
+            bye
+            "
         env:
-          FTP_HOST: ${{ secrets.FTP_HOST }}
-          FTP_PORT: ${{ secrets.FTP_PORT }}
-          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
-          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
-          FTP_PUBLIC_HTML: ${{ secrets.FTP_PUBLIC_HTML }}
-          FTP_LARAVEL_DIR: ${{ secrets.FTP_LARAVEL_DIR }}
+            FTP_HOST: ${{ secrets.FTP_HOST }}
+            FTP_PORT: ${{ secrets.FTP_PORT }}
+            FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+            FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+            FTP_PUBLIC_HTML: ${{ secrets.FTP_PUBLIC_HTML }}
+            FTP_LARAVEL_DIR: ${{ secrets.FTP_LARAVEL_DIR }}
