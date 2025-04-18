@@ -1,0 +1,62 @@
+name: Update via FTP
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "resources/**"
+      - "routes/**"
+      - "public/**"
+      - "config/**"
+      - "app/**"
+      - "composer.json"
+      - "database/**"
+      - "artisan"
+      - "package.json"
+      - "storage/**"
+      - "webpack.mix.js"
+      - "tailwind.config.js"
+
+jobs:
+  deploy:
+    name: Update via FTP
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Install lftp for FTP operations
+      - name: Install lftp
+        run: sudo apt-get install -y lftp
+
+      # Sync files to FTP server
+      - name: Deploy Changed Files to FTP
+        env:
+          FTP_HOST: ${{ secrets.FTP_HOST }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          FTP_PUBLIC_HTML: ${{ secrets.FTP_PUBLIC_HTML }}
+        run: |
+          # Get the list of files changed in the last commit
+          CHANGED_FILES=$(git diff-tree --no-commit-id --name-only -r HEAD)
+
+          # Sync all changed files to the Laravel directory on the FTP server
+          for FILE in $CHANGED_FILES; do
+            lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_HOST" -e "
+            put -O $FTP_PUBLIC_HTML/$FILE $FILE;
+            bye
+            "
+          done
+
+          # Check if any files in the /public folder were changed
+          if echo "$CHANGED_FILES" | grep -q "^public/"; then
+            # Sync only the /public folder excluding mix-manifest.json to public_html
+            lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_HOST" -e "
+            mirror --reverse --delete --exclude mix-manifest.json ./public $FTP_PUBLIC_HTML;
+            bye
+            "
+          fi
+          "
