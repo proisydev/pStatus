@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" class="dark" prefix="og: https://ogp.me/ns#">
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,15 +23,15 @@
         content="https://proisy.dev/api/image-open-graph?title=@yield('title', 'Undefined')&page={{ config('app.url') . parse_url(url()->current(), PHP_URL_PATH) }}" />
 
 
-    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
-    <link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg" />
-    <link rel="shortcut icon" href="/favicon/favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
-    <meta name="apple-mobile-web-app-title" content="pStatus" />
-    <link rel="manifest" href="/favicon/site.webmanifest" />
+    <link rel="icon" type="image/png" href="/assets/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg" />
+    <link rel="shortcut icon" href="/assets/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="watchStatus" />
+    <link rel="manifest" href="/assets/favicon/site.webmanifest" />
 
-    <link rel="stylesheet" href="{{ mix('css/app.css') }}">
-    <script src="{{ mix('js/app.js') }}" defer></script>
+    <link rel="stylesheet" href="{{ mix('assets/css/app.css') }}">
+    <script src="{{ mix('assets/js/app.js') }}" defer></script>
 </head>
 
 <body class="bg-gray-950 text-gray-100 min-h-screen flex flex-col">
@@ -41,8 +41,8 @@
                 <div class="flex items-center space-x-2">
                     <a href="{{ config('app.url') }}/status" rel="noopener"
                         title="{{ config('app.name') }} Status Page" class="flex items-center space-x-2">
-                        <img src="{{ asset('icon.png') }}" alt="{{ config('app.name') }} Logo"
-                            class="h-8 w-8 rounded-full" draggable="false" />
+                        <img src="{{ asset('assets/img/ws.logo.no-bg.svg') }}" alt="{{ config('app.name') }} Logo"
+                            class="h-8 w-8" draggable="false" />
                         <span class="text-xl font-bold">{{ config('app.name') }}</span>
                     </a>
                 </div>
@@ -86,8 +86,8 @@
                 <div class="mb-4 md:mb-0">
                     <div class="flex items-center space-x-2">
                         <div class=" flex items-center justify-center">
-                            <img src="{{ asset('icon.png') }}" alt="{{ config('app.name') }} Logo"
-                                class="h-6 w-6 rounded-full" draggable="false" />
+                            <img src="{{ asset('assets/img/ws.logo.no-bg.svg') }}" alt="{{ config('app.name') }} Logo"
+                                class="h-6 w-6" draggable="false" />
                         </div>
                         <span class="font-bold">{{ config('app.name') }}</span>
                     </div>
