@@ -212,46 +212,50 @@
                         </div>
                     </div>
 
-                    <div class="h-48 relative flex-grow">
-                        <svg class="w-full h-full" viewBox="0 0 24 100" preserveAspectRatio="none">
-                            <line x1="0" y1="0" x2="24" y2="0" stroke="#374151"
-                                stroke-width="0.5" />
-                            <line x1="0" y1="25" x2="24" y2="25" stroke="#374151"
-                                stroke-width="0.5" />
-                            <line x1="0" y1="50" x2="24" y2="50" stroke="#374151"
-                                stroke-width="0.5" />
-                            <line x1="0" y1="75" x2="24" y2="75" stroke="#374151"
-                                stroke-width="0.5" />
-                            <line x1="0" y1="100" x2="24" y2="100" stroke="#374151"
-                                stroke-width="0.5" />
-                            @php
-                                $points = [];
-                                $maxValue = max(array_column($responseTimes, 'value'));
-                                foreach ($responseTimes as $index => $response) {
-                                    $x = ($index / (count($responseTimes) - 1)) * 24;
-                                    $y = 100 - ($response['value'] / $maxValue) * 100;
-                                    $points[] = "{$x},{$y}";
-                                }
-                            @endphp
-                            <path d="M{{ implode(' ', $points) }}" fill="none" stroke="#8b5cf6" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round" />
-                            <path d="M{{ implode(' ', $points) }} V100 H0 Z" fill="url(#gradient)" opacity="0.2" />
-                            <defs>
-                                <linearGradient id="gradient" x1="0%" y1="0%" x2="0%"
-                                    y2="100%">
-                                    <stop offset="0%" stop-color="#8b5cf6" stop-opacity="1" />
-                                    <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0" />
-                                </linearGradient>
-                            </defs>
-                        </svg>
-                        <div class="flex justify-between text-xs text-gray-500 mt-2">
-                            @foreach ($responseTimes as $index => $response)
-                                @if ($index % (int) ceil(count($responseTimes) / 5) === 0)
-                                    <span>{{ \Carbon\Carbon::parse($response['datetime'])->format('h A') }}</span>
-                                @endif
-                            @endforeach
+                    @if (!empty($responseTimes))
+                        <div class="h-48 relative flex-grow">
+                            <svg class="w-full h-full" viewBox="0 0 24 100" preserveAspectRatio="none">
+                                <line x1="0" y1="0" x2="24" y2="0" stroke="#374151"
+                                    stroke-width="0.5" />
+                                <line x1="0" y1="25" x2="24" y2="25" stroke="#374151"
+                                    stroke-width="0.5" />
+                                <line x1="0" y1="50" x2="24" y2="50" stroke="#374151"
+                                    stroke-width="0.5" />
+                                <line x1="0" y1="75" x2="24" y2="75" stroke="#374151"
+                                    stroke-width="0.5" />
+                                <line x1="0" y1="100" x2="24" y2="100" stroke="#374151"
+                                    stroke-width="0.5" />
+                                @php
+                                    if (!empty($responseTimes)) {
+                                        $points = [];
+                                        $maxValue = max(array_column($responseTimes, 'value'));
+                                        foreach ($responseTimes as $index => $response) {
+                                            $x = ($index / (count($responseTimes) - 1)) * 24;
+                                            $y = 100 - ($response['value'] / $maxValue) * 100;
+                                            $points[] = "{$x},{$y}";
+                                        }
+                                    }
+                                @endphp
+                                <path d="M{{ implode(' ', $points) }}" fill="none" stroke="#8b5cf6" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                                <path d="M{{ implode(' ', $points) }} V100 H0 Z" fill="url(#gradient)" opacity="0.2" />
+                                <defs>
+                                    <linearGradient id="gradient" x1="0%" y1="0%" x2="0%"
+                                        y2="100%">
+                                        <stop offset="0%" stop-color="#8b5cf6" stop-opacity="1" />
+                                        <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                            <div class="flex justify-between text-xs text-gray-500 mt-2">
+                                @foreach ($responseTimes as $index => $response)
+                                    @if ($index % (int) ceil(count($responseTimes) / 5) === 0)
+                                        <span>{{ \Carbon\Carbon::parse($response['datetime'])->format('h A') }}</span>
+                                    @endif
+                                @endforeach
+                            </div>
                         </div>
-                    </div>
+                    @endif
                 </div>
             </div>
             <div>
