@@ -176,7 +176,7 @@
             </div>
         </div>
     </div>
-    @if (!empty($responseTimes)) {
+    @if (!empty($responseTimes))
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
             @php
                 if (!empty($responseTimes)) {
@@ -287,9 +287,8 @@
                 </div>
             </div>
         </div>
-        }
     @endif
-    @if (!empty($logs)) {
+    @if (!empty($logs))
         <div class="bg-gray-900 rounded-lg border border-gray-800 p-6">
             <h2 class="text-lg font-semibold mb-4">Logs</h2>
             <div class="space-y-6">
@@ -334,6 +333,5 @@
                 @endforeach
             </div>
         </div>
-        }
     @endif
 @endsection
